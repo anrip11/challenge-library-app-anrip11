@@ -16,7 +16,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen w-full px-[24px]'>
+    <div className='flex flex-col items-center justify-center min-h-screen w-full'>
       {/* Container Utama dengan lebar fix sesuai proporsi Figma */}
       <div className='w-full max-w-[400px] flex flex-col'>
         {/* 1. Bagian Brand (Logo & Teks) */}
