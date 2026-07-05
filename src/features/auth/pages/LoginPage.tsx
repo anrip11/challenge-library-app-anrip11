@@ -8,17 +8,17 @@ import logo from '@/assets/logo.svg';
 export default function LoginPage() {
   const navigate = useNavigate();
 
-  // 1. State untuk menampung data form
+  // 1. State untuk menampung data form[cite: 1]
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  // 2. State untuk interaksi UI (Loading & Error)
+  // 2. State untuk interaksi UI (Loading & Error)[cite: 1]
   const [showPassword, setShowPassword] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(''); // Untuk pesan error dari server
+  const [errorMessage, setErrorMessage] = useState(''); // Untuk pesan error dari server[cite: 1]
   const [isLoading, setIsLoading] = useState(false);
 
-  // 3. Fungsi Submit Async ke Backend Railway
+  // 3. Fungsi Submit Async ke Backend Railway[cite: 1]
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsError(false);
@@ -27,32 +27,41 @@ export default function LoginPage() {
 
     try {
       const response = await fetch(
-        'https://library-backend-production-b9cf.up.railway.app/api/auth/login',
+        'https://library-backend-production-b9cf.up.railway.app/api/auth/login', //[cite: 1]
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          // Mengirim email dan password dalam bentuk JSON
+          // Mengirim email dan password dalam bentuk JSON[cite: 1]
           body: JSON.stringify({ email, password }),
         }
       );
 
-      const data = await response.json();
+      const data = await response.json(); //[cite: 1]
 
-      // Jika response dari server bukan 200 OK (misal: password salah)
+      // Jika response dari server bukan 200 OK (misal: password salah)[cite: 1]
       if (!response.ok) {
         throw new Error(
           data.message ||
-            'Gagal melakukan login. Silakan periksa kembali kredensial Anda.'
+            'Gagal melakukan login. Silakan periksa kembali kredensial Anda.' //[cite: 1]
         );
       }
 
-      // Jika sukses, simpan Token VIP ke Local Storage
-      // Catatan: Pastikan key token dari backend bernama "token" (atau sesuaikan jika namanya "accessToken")
-      localStorage.setItem('token', data.token);
+      // --- FIX LOGIC: Deteksi lokasi token dengan aman ---
+      // Mencari token di berbagai kemungkinan letak respon JSON
+      const actualToken = data?.data?.token || data?.token || data?.accessToken;
 
-      // Arahkan ke halaman utama
+      if (!actualToken) {
+        throw new Error(
+          'Gagal mengekstrak token dari server. Hubungi tim backend.'
+        );
+      }
+
+      // Jika sukses, simpan Token VIP ke Local Storage[cite: 1]
+      localStorage.setItem('token', actualToken);
+
+      // Arahkan ke halaman utama[cite: 1]
       navigate('/');
     } catch (error) {
       setIsError(true);
@@ -60,7 +69,7 @@ export default function LoginPage() {
       if (error instanceof Error) {
         setErrorMessage(error.message);
       } else {
-        setErrorMessage('Terjadi kesalahan sistem yang tidak diketahui.');
+        setErrorMessage('Terjadi kesalahan sistem yang tidak diketahui.'); //[cite: 1]
       }
     } finally {
       setIsLoading(false);
@@ -90,8 +99,8 @@ export default function LoginPage() {
             <Input
               type='email'
               placeholder=''
-              value={email} // Binding nilai
-              onChange={(e) => setEmail(e.target.value)} // Update state saat diketik
+              value={email} // Binding nilai[cite: 1]
+              onChange={(e) => setEmail(e.target.value)} // Update state saat diketik[cite: 1]
               disabled={isLoading}
               className={`rounded-xl px-[16px] py-[8px] h-auto focus-visible:ring-0 focus-visible:ring-offset-0 ${
                 isError
@@ -109,8 +118,8 @@ export default function LoginPage() {
               <Input
                 type={showPassword ? 'text' : 'password'}
                 placeholder=''
-                value={password} // Binding nilai
-                onChange={(e) => setPassword(e.target.value)} // Update state saat diketik
+                value={password} // Binding nilai[cite: 1]
+                onChange={(e) => setPassword(e.target.value)} // Update state saat diketik[cite: 1]
                 disabled={isLoading}
                 className={`rounded-xl px-[16px] py-[8px] pr-12 h-auto focus-visible:ring-0 focus-visible:ring-offset-0 ${
                   isError
@@ -128,7 +137,7 @@ export default function LoginPage() {
               </button>
             </div>
 
-            {/* Tampilkan pesan error spesifik dari backend jika ada */}
+            {/* Tampilkan pesan error spesifik dari backend jika ada[cite: 1] */}
             {isError && (
               <span className='text-sm font-medium text-[#EE1D52]'>
                 {errorMessage}
@@ -141,7 +150,7 @@ export default function LoginPage() {
             disabled={isLoading}
             className='w-full bg-primary-dark hover:bg-primary-dark/90 text-white rounded-full h-auto py-[10px] font-semibold text-md transition-all mt-1 flex items-center justify-center gap-2'
           >
-            {/* Animasi loading menggunakan icon Loader2 dari lucide-react */}
+            {/* Animasi loading menggunakan icon Loader2 dari lucide-react[cite: 1] */}
             {isLoading && <Loader2 className='animate-spin' size={20} />}
             {isLoading ? 'Signing in...' : 'Login'}
           </Button>
