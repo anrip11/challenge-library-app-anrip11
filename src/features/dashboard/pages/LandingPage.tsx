@@ -11,6 +11,7 @@ import educationIcon from '@/assets/education.svg';
 import avatar from '@/assets/avatar.svg';
 import starIcon from '@/assets/star.svg';
 import bookIcon from '@/assets/books.svg';
+import { Link } from 'react-router-dom';
 
 // --- Interfaces ---
 interface Book {
@@ -194,8 +195,9 @@ export default function LandingPage() {
               ))
             : /* DATA ASLI */
               books.map((book) => (
-                <div
+                <Link
                   key={book.id}
+                  to={`/book/${book.id}`}
                   className='flex flex-col gap-3 group cursor-pointer'
                 >
                   <div className='w-full aspect-[3/4] rounded-2xl overflow-hidden bg-neutral-100 border border-neutral-100'>
@@ -223,7 +225,7 @@ export default function LandingPage() {
                       </span>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
         </div>
 
