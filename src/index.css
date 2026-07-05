@@ -69,6 +69,13 @@
   }
 }
 
+@layer components {
+  .custom-container {
+    margin: 0 auto;
+    @apply max-w-[1200px] px-[12px];
+  }
+}
+
 @theme {
   /* --- Typography --- */
   --font-sans: 'Quicksand', sans-serif;
